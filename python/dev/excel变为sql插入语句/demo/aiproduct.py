@@ -147,7 +147,6 @@ class Insurance():
             Data_sheet = workbook.sheets()[d]  # 通过索引获取
             rowNum = Data_sheet.nrows  # sheet行数
             colNum = Data_sheet.ncols  # sheet列数
-
             # 行数
             for i in range(rowNum):
                 # 拿标题数据
@@ -158,29 +157,23 @@ class Insurance():
                         isnew = 'N'
                     else:
                         isnew = 'Y'
+                    
+                    # 表格内部行数据
                     for j in range(4, 8):
+                        # 表格内部列数据
                         for m in range(1, colNum):
-                            # 名称，分型，分期，min_age,max_age,isPE,iscom,isnew
-                            rate = ["国泰如意保", None, None, age[0], age[1], 'N', 'N', isnew]
-                            rate[1] = Data_sheet.cell_value(i + j, 0)
-                            rate[2] = (str(Data_sheet.cell_value(i + 3, m))
-                                       .replace(".0", "")
-                                       .replace("1","I期")
-                                       .replace("2","II期")
-                                       .replace( "3", "III期")
-                                       .replace("pCR", "pCR")
-                                       .replace("0", "0期"))
                             # 是否社保
                             if (m < 5):
-                                rate[5] = 'Y'
-
-                            if (Data_sheet.cell_value(i + 3, m) == "pCR"):
-                                rate[6] = 'Y'
-                            money = Data_sheet.name + ":" + str(Data_sheet.cell_value(i + j, m)).split(".")[0] + "元"
-                            if ("-".join(rate) in reates):
-                                reates["-".join(rate)].append(money)
+                                # 设置费率
+                                self.set_rate(Data_sheet, age, i, isnew, j, m, "Y",reates)
                             else:
-                                reates["-".join(rate)] = [money]
+                                # 设置费率
+                                self.set_rate(Data_sheet, age, i, isnew, j, m, "N",reates)
+
+                        # 只有前五行的情况下设置无社保给付型费率
+                        if(colNum == 5):
+                            for m in range(1, colNum):
+                                self.set_rate(Data_sheet, age, i, isnew, j, m, "N", reates)
 
         print(reates)
         for d in reates.keys():
@@ -190,7 +183,7 @@ class Insurance():
             if (len(r) == 10):
                 r.append("")
             rate_list.append(r)
-        # ['国泰如意保', 'Luminal A', '0', '18', '30', 'Y', 'N', '报销型100万保额:1198', '给付型每10万保额:1283', '附加特药50万保额:504']
+        # ["国泰如意保-Luminal A-0期-18-30-Y-N-N", '报销型100万保额:1198', '给付型每10万保额:1283', '附加特药50万保额:504']
         self.addInsuranceRate(rate_list)
 
         rate_list2 = []
@@ -208,6 +201,33 @@ class Insurance():
         for dd in rate_list2:
             self.sql += "insert into aiproduct.fy_insurance_rate(insurance_name,min_age,max_age,plana) values ('%s','%s','%s','%s');" % (
             dd[0], dd[1], dd[2], dd[3])
+
+    # 设置费率
+    def set_rate(self, Data_sheet, age, i, isnew, j, m, ispe, reates):
+        # 名称，分型，分期，min_age,max_age,isPE,iscom,isnew
+        rate = ["国泰如意保", None, None, age[0], age[1], 'N', 'N', isnew]
+        rate[1] = Data_sheet.cell_value(i + j, 0)
+        rate[2] = (str(Data_sheet.cell_value(i + 3, m))
+                   .replace(".0", "")
+                   .replace("1", "I期")
+                   .replace("2", "II期")
+                   .replace("3", "III期")
+                   .replace("pCR", "pCR")
+                   .replace("0", "0期"))
+
+        # 社保
+        rate[5] = ispe
+        if (Data_sheet.cell_value(i + 3, m) == "pCR"):
+            rate[6] = 'Y'
+        # sheet名字:
+        money = Data_sheet.name + ":" + str(Data_sheet.cell_value(i + j, m)).split(".")[0] + "元"
+        # ["国泰如意保", None, None, age[0], age[1], 'N', 'N', isnew] 拼串-> 国泰如意保-Luminal A-0期-18-30-Y-N-N
+        key = "-".join(rate)
+        # 如果在字典里就拼接到数组里
+        if (key in reates):
+            reates[key].append(money)
+        else:
+            reates[key] = [money]
 
     def addInsuranceRate(self, data):
         for d in data:
