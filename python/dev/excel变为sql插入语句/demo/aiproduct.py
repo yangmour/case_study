@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
+import copy
+
 import requests
 import csv, os
 import sys, os
@@ -245,16 +247,16 @@ class Insurance():
 class InsuranceTK():
     def __init__(self):
         self.workbook = xlrd.open_workbook(
-            "/Users/zhaosai/Downloads/foryor/work_document/预核保文档/泰康报销型3.0plus费率表.xlsx")
+            "/Users/xiwen/Desktop/dev/文档/预核保文档/泰康给付型3.0plus费率表.xlsx")
         self.sql = ""
         self.insuranceRate1()
         self.insuranceRate2()
-        self.insuranceRate3()
-        self.insuranceRate4()
-        self.insuranceRate5()
-        self.insuranceRate6()
-        self.insuranceRate7()
-        self.insuranceRate8()
+        # self.insuranceRate3()
+        # self.insuranceRate4()
+        # self.insuranceRate5()
+        # self.insuranceRate6()
+        # self.insuranceRate7()
+        # self.insuranceRate8()
         self.writeSql()
 
     def insuranceRate1(self):
@@ -281,11 +283,17 @@ class InsuranceTK():
                                                                                                      "I期").replace("2",
                                                                                                                     "II期").replace(
                                 "3", "III期").replace("pCR", "pCR").replace("0", "0期")
+                            # 无社保
+                            money = Data_sheet.name + ":" + str(Data_sheet.cell_value(i + j, m)).split(".")[0] + "元"
+
+                            rate2 = copy.deepcopy(rate)
+                            rate2.append(money)
+                            rate_list.append(rate2)
                             if (m < 5):
                                 rate[5] = 'Y'
                             if (Data_sheet.cell_value(i + 3, m) == "pCR"):
                                 rate[6] = 'Y'
-                            money = Data_sheet.name + ":" + str(Data_sheet.cell_value(i + j, m)).split(".")[0] + "元"
+                            # 有社保
                             rate.append(money)
                             rate_list.append(rate)
         for d in rate_list:
@@ -521,5 +529,5 @@ class InsuranceTK():
 
 if __name__ == '__main__':
     # Data()
-    Insurance()
-    # InsuranceTK()
+    # Insurance()
+    InsuranceTK()
