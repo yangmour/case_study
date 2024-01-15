@@ -20,9 +20,9 @@ import xlrd
 class Data():
     def __init__(self):
         self.insuranceRate(
-            "/Users/zhaosai/Downloads/foryor/work_document/预核保文档/复联联合乳果爱医疗保险（2021版）费率表.json")
+            "/Users/xiwen/Desktop/dev/文档/预核保文档/复联联合乳果爱医疗保险（2021版）费率表.json")
         self.insuranceRate(
-            "/Users/zhaosai/Downloads/foryor/work_document/预核保文档/复联联合乳果爱医疗保险（2021版）费率表2.json")
+            "/Users/xiwen/Desktop/dev/文档/预核保文档/复联联合乳果爱医疗保险（2021版）费率表2.json")
 
     def insuranceRate(self, path):
         r = open(path, "r")
@@ -251,12 +251,12 @@ class InsuranceTK():
         self.sql = ""
         self.insuranceRate1()
         self.insuranceRate2()
-        # self.insuranceRate3()
-        # self.insuranceRate4()
-        # self.insuranceRate5()
-        # self.insuranceRate6()
-        # self.insuranceRate7()
-        # self.insuranceRate8()
+        self.insuranceRate3()
+        self.insuranceRate4()
+        self.insuranceRate5()
+        self.insuranceRate6()
+        self.insuranceRate7()
+        self.insuranceRate8()
         self.writeSql()
 
     def insuranceRate1(self):
@@ -528,6 +528,6 @@ class InsuranceTK():
 
 
 if __name__ == '__main__':
-    # Data()
+    Data()
     # Insurance()
-    InsuranceTK()
+    # InsuranceTK()
