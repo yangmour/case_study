@@ -247,7 +247,7 @@ class Insurance():
 class InsuranceTK():
     def __init__(self):
         self.workbook = xlrd.open_workbook(
-            "/Users/xiwen/Desktop/dev/文档/预核保文档/泰康给付型3.0plus费率表.xlsx")
+            "/Users/xiwen/Desktop/dev/文档/预核保文档/泰康报销型3.0plus费率表.xlsx")
         self.sql = ""
         self.insuranceRate1()
         self.insuranceRate2()
