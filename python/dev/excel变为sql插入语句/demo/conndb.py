@@ -7,11 +7,11 @@ from bs4 import BeautifulSoup
 
 def conn_db():  # 连接数据库函数
     conn = pymysql.connect(
-        host='127.0.0.1',
+        host='111.229.165.176',
         port=3306,
         user='root',
-        passwd='123456',
-        db='aiproduct',
+        passwd='xiwen123',
+        db='test',
         charset='utf8')
     cur = conn.cursor()
     return conn, cur

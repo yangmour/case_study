@@ -68,6 +68,33 @@ class case():
                                 w.write(sql + "\n")
 
 
+# 费率数据导入
+class rate_insert:
+    def __init__(self,fielName):
+        self.work_dir = os.getcwd() + "/"
+        self.conn, self.cur = conndb.conn_db()
+        self.batch_insert(fielName)
+
+    # 批量插入
+    def batch_insert(self, fielName):
+        with open(self.work_dir + fielName) as file:
+            print("打开文件！")
+            # sql_all = ""
+            # count = 0
+            self.cur.execute('START TRANSACTION;')
+
+            for line_sql in file:
+
+                stat = conndb.exe_update(self.cur, line_sql)
+                print(stat)
+            # 提交
+            conndb.exe_commit(self.cur)
+            conndb.conn_close(self.conn, self.cur)
+
+            print("批量插入提交完成!")
+
+
+
 # 复联联合乳果爱
 class Data():
     def __init__(self):
@@ -585,3 +612,5 @@ if __name__ == '__main__':
     Data()
     Insurance()
     InsuranceTK()
+
+    rate_insert("insert.sql")
