@@ -16,15 +16,67 @@ import json
 import re
 import xlrd
 
+
+class case():
+    def __init__(self):
+        self.work_dir = os.getcwd() + "/"
+        self.get()
+
+    def get(self):
+        w = open(os.getcwd() + "/sql.sql", "w+")
+        for parent, dirnames, filenames in os.walk(self.work_dir):
+            for filename in filenames:
+                if (filename.endswith(".json")):
+                    r = open(self.work_dir + filename, "r")
+                    j = json.loads(r.read())
+                    imageId = {}
+                    if ("imageList" in j):
+                        for p in j:
+                            if (p == "imageList"):
+                                for d in j[p]:
+                                    conn, cur = conndb.conn_db()
+                                    imageId[d["id"]] = d["md5"]
+                                    sql = "update fy_case_structuring_summary s set s.summary = '%s' where s.image_id in (select i.id from fy_health_record_image i where  i.uniq_file_id = '%s');" % (
+                                    json.dumps(d, ensure_ascii=False), d["md5"])
+                                    sql2 = "delete from fy_case_structuring_summary_info where image_id in (select i.id from fy_health_record_image i where  i.uniq_file_id = '%s'); " % (
+                                    d["md5"])
+                                    w.write(sql + "\n")
+                                    w.write(sql2 + "\n")
+                                    sta = conndb.exe_update(cur, sql)
+                                    sta = conndb.exe_update(cur, sql2)
+                                    conndb.exe_commit(cur)
+                                    conndb.conn_close(conn, cur)
+                            elif (p == "mergeInfo"):
+                                info = j[p]
+                                conn, cur = conndb.conn_db()
+                                user_id = 0
+                                num = 0
+                                for d in info["fileList"]:
+                                    if ("imageId" in d):
+                                        num += 1
+                                        sql = "SELECT id,user_id FROM fy_health_record_image where uniq_file_id = '%s' order by id desc limit 1" % (
+                                        imageId[d["imageId"]])
+                                        sta = conndb.exe_query(cur, sql)
+                                        for image_id in cur.fetchall():
+                                            d["uniqFileId"] = image_id[0]
+                                            user_id = image_id[1]
+                                sql = "update fy_case_structuring_summary set summary = '%s' where user_id = %s and  is_complete = 'Y'" % (
+                                json.dumps(info, ensure_ascii=False), user_id)
+                                sta = conndb.exe_update(cur, sql)
+                                conndb.exe_commit(cur)
+                                conndb.conn_close(conn, cur)
+                                w.write(sql + "\n")
+
+
 # 复联联合乳果爱
 class Data():
     def __init__(self):
         self.insuranceRate(
-            "/Users/xiwen/Desktop/dev/文档/预核保文档/复联联合乳果爱医疗保险（2021版）费率表.json")
+            "/Users/xiwen/Desktop/dev/文档/预核保文档/复联联合乳果爱医疗保险（2021版）费率表.json", "Y")
         self.insuranceRate(
-            "/Users/xiwen/Desktop/dev/文档/预核保文档/复联联合乳果爱医疗保险（2021版）费率表2.json")
+            "/Users/xiwen/Desktop/dev/文档/预核保文档/复联联合乳果爱医疗保险（2021版）费率表2.json", "N")
 
-    def insuranceRate(self, path):
+    def insuranceRate(self, path, ispe):
         r = open(path, "r")
         data = json.loads(r.read())
         rate = ["复星联合乳果爱", "", "", "", "", "", "", "", "", "", "", "", ""]
@@ -78,7 +130,8 @@ class Data():
                     rate[8] = age[1]
                 if (len(dd[3]) > 0):
                     rate[2] = dd[3]
-                rate[9] = "N"
+                # 社保
+                rate[9] = ispe
                 # 报销型10万保额（计划一）：1602元报销型40万保额（计划二）：4110元报销型150万保额（计划三）：14075元
                 rate[10] = "报销型10万保额（计划一）：" + dd[4] + "元"
                 rate[11] = "报销型40万保额（计划二）：" + dd[5] + "元"
@@ -94,7 +147,7 @@ class Data():
         sql = ""
         for d in data:
             sql += "insert into fy_insurance_rate(insurance_name,typing,staging,her,hr,ki,newcomp,min_age,max_age,ispe,plana,planb,planc) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
-            d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9], d[10], d[11], d[12])
+                d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9], d[10], d[11], d[12])
         a = open("insert.sql", "a+")
         for d in sql.split(";"):
             if (len(d) > 2):
@@ -159,7 +212,7 @@ class Insurance():
                         isnew = 'N'
                     else:
                         isnew = 'Y'
-                    
+
                     # 表格内部行数据
                     for j in range(4, 8):
                         # 表格内部列数据
@@ -167,13 +220,13 @@ class Insurance():
                             # 是否社保
                             if (m < 5):
                                 # 设置费率
-                                self.set_rate(Data_sheet, age, i, isnew, j, m, "Y",reates)
+                                self.set_rate(Data_sheet, age, i, isnew, j, m, "Y", reates)
                             else:
                                 # 设置费率
-                                self.set_rate(Data_sheet, age, i, isnew, j, m, "N",reates)
+                                self.set_rate(Data_sheet, age, i, isnew, j, m, "N", reates)
 
                         # 只有前五行的情况下设置无社保给付型费率
-                        if(colNum == 5):
+                        if (colNum == 5):
                             for m in range(1, colNum):
                                 self.set_rate(Data_sheet, age, i, isnew, j, m, "N", reates)
 
@@ -202,7 +255,7 @@ class Insurance():
                     rate_list2.append(rate)
         for dd in rate_list2:
             self.sql += "insert into fy_insurance_rate(insurance_name,min_age,max_age,plana) values ('%s','%s','%s','%s');" % (
-            dd[0], dd[1], dd[2], dd[3])
+                dd[0], dd[1], dd[2], dd[3])
 
     # 设置费率
     def set_rate(self, Data_sheet, age, i, isnew, j, m, ispe, reates):
@@ -234,7 +287,7 @@ class Insurance():
     def addInsuranceRate(self, data):
         for d in data:
             self.sql += "insert into fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,ispe,pcr,newcomp,plana,planb,planc) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
-            d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9], d[10])
+                d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9], d[10])
 
     def writeSql(self):
         a = open("insert.sql", "a+")
@@ -242,6 +295,7 @@ class Insurance():
             if (len(d) > 2):
                 a.write(d + ";\n")
         a.close()
+
 
 # 泰康费率
 class InsuranceTK():
@@ -298,7 +352,7 @@ class InsuranceTK():
                             rate_list.append(rate)
         for d in rate_list:
             self.sql += "insert into fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,ispe,pcr,newcomp,plana) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
-            d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8])
+                d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8])
 
     def insuranceRate2(self):
         rate_list = []
@@ -321,7 +375,7 @@ class InsuranceTK():
                             rate_list.append(rate)
         for d in rate_list:
             self.sql += "insert into fy_insurance_rate(insurance_name,typing,min_age,max_age,plana) values ('%s','%s','%s','%s','%s');" % (
-            d[0], d[1], d[2], d[3], d[4])
+                d[0], d[1], d[2], d[3], d[4])
 
     def insuranceRate3(self):
         rate_list = []
@@ -360,7 +414,7 @@ class InsuranceTK():
                             rate_list.append(rate)
         for d in rate_list:
             self.sql += "insert into fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,ispe,pcr,newcomp,plana) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
-            d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8])
+                d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8])
 
     def insuranceRate4(self):
         rate_list = []
@@ -385,7 +439,7 @@ class InsuranceTK():
                             rate_list.append(rate)
         for d in rate_list:
             self.sql += "insert into fy_insurance_rate(insurance_name,typing,min_age,max_age,ispe,plana) values ('%s','%s','%s','%s','%s','%s');" % (
-            d[0], d[1], d[2], d[3], d[4], d[5])
+                d[0], d[1], d[2], d[3], d[4], d[5])
 
     def insuranceRate5(self):
         rate_list = []
@@ -403,7 +457,7 @@ class InsuranceTK():
                     rate_list.append(rate)
         for d in rate_list:
             self.sql += "insert into fy_insurance_rate(insurance_name,min_age,max_age,plana) values ('%s','%s','%s','%s');" % (
-            d[0], d[1], d[2], d[3])
+                d[0], d[1], d[2], d[3])
 
     def insuranceRate6(self):
         rate_list = []
@@ -453,7 +507,7 @@ class InsuranceTK():
             rate_list.append(r)
         for d in rate_list:
             self.sql += "insert into fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,ispe,pcr,newcomp,plana,planb) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
-            d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9])
+                d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9])
 
     def insuranceRate7(self):
         rate_list = []
@@ -499,7 +553,7 @@ class InsuranceTK():
             rate_list.append(r)
         for d in rate_list:
             self.sql += "insert into fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,pcr,newcomp,plana,planb) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
-            d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8])
+                d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8])
 
     def insuranceRate8(self):
         rate_list = []
@@ -517,7 +571,7 @@ class InsuranceTK():
                     rate_list.append(rate)
         for d in rate_list:
             self.sql += "insert into fy_insurance_rate(insurance_name,min_age,max_age,plana) values ('%s','%s','%s','%s');" % (
-            d[0], d[1], d[2], d[3])
+                d[0], d[1], d[2], d[3])
 
     def writeSql(self):
         a = open("insert.sql", "a+")
