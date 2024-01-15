@@ -93,7 +93,7 @@ class Data():
     def addInsuranceRate(self, data):
         sql = ""
         for d in data:
-            sql += "insert into aiproduct.fy_insurance_rate(insurance_name,typing,staging,her,hr,ki,newcomp,min_age,max_age,ispe,plana,planb,planc) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
+            sql += "insert into fy_insurance_rate(insurance_name,typing,staging,her,hr,ki,newcomp,min_age,max_age,ispe,plana,planb,planc) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
             d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9], d[10], d[11], d[12])
         a = open("insert.sql", "a+")
         for d in sql.split(";"):
@@ -201,7 +201,7 @@ class Insurance():
                     rate[3] = Data_sheet.name + ":" + str(Data_sheet.cell_value(i, 1)) + "元"
                     rate_list2.append(rate)
         for dd in rate_list2:
-            self.sql += "insert into aiproduct.fy_insurance_rate(insurance_name,min_age,max_age,plana) values ('%s','%s','%s','%s');" % (
+            self.sql += "insert into fy_insurance_rate(insurance_name,min_age,max_age,plana) values ('%s','%s','%s','%s');" % (
             dd[0], dd[1], dd[2], dd[3])
 
     # 设置费率
@@ -233,7 +233,7 @@ class Insurance():
 
     def addInsuranceRate(self, data):
         for d in data:
-            self.sql += "insert into aiproduct.fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,ispe,pcr,newcomp,plana,planb,planc) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
+            self.sql += "insert into fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,ispe,pcr,newcomp,plana,planb,planc) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
             d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9], d[10])
 
     def writeSql(self):
@@ -297,7 +297,7 @@ class InsuranceTK():
                             rate.append(money)
                             rate_list.append(rate)
         for d in rate_list:
-            self.sql += "insert into aiproduct.fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,ispe,pcr,newcomp,plana) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
+            self.sql += "insert into fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,ispe,pcr,newcomp,plana) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
             d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8])
 
     def insuranceRate2(self):
@@ -320,7 +320,7 @@ class InsuranceTK():
                             rate.append(money)
                             rate_list.append(rate)
         for d in rate_list:
-            self.sql += "insert into aiproduct.fy_insurance_rate(insurance_name,typing,min_age,max_age,plana) values ('%s','%s','%s','%s','%s');" % (
+            self.sql += "insert into fy_insurance_rate(insurance_name,typing,min_age,max_age,plana) values ('%s','%s','%s','%s','%s');" % (
             d[0], d[1], d[2], d[3], d[4])
 
     def insuranceRate3(self):
@@ -359,7 +359,7 @@ class InsuranceTK():
                             rate.append(money)
                             rate_list.append(rate)
         for d in rate_list:
-            self.sql += "insert into aiproduct.fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,ispe,pcr,newcomp,plana) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
+            self.sql += "insert into fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,ispe,pcr,newcomp,plana) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
             d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8])
 
     def insuranceRate4(self):
@@ -384,7 +384,7 @@ class InsuranceTK():
                             rate.append(money)
                             rate_list.append(rate)
         for d in rate_list:
-            self.sql += "insert into aiproduct.fy_insurance_rate(insurance_name,typing,min_age,max_age,ispe,plana) values ('%s','%s','%s','%s','%s','%s');" % (
+            self.sql += "insert into fy_insurance_rate(insurance_name,typing,min_age,max_age,ispe,plana) values ('%s','%s','%s','%s','%s','%s');" % (
             d[0], d[1], d[2], d[3], d[4], d[5])
 
     def insuranceRate5(self):
@@ -402,7 +402,7 @@ class InsuranceTK():
                     rate[3] = Data_sheet.name + ":" + str(Data_sheet.cell_value(i, 1)) + "元"
                     rate_list.append(rate)
         for d in rate_list:
-            self.sql += "insert into aiproduct.fy_insurance_rate(insurance_name,min_age,max_age,plana) values ('%s','%s','%s','%s');" % (
+            self.sql += "insert into fy_insurance_rate(insurance_name,min_age,max_age,plana) values ('%s','%s','%s','%s');" % (
             d[0], d[1], d[2], d[3])
 
     def insuranceRate6(self):
@@ -452,7 +452,7 @@ class InsuranceTK():
                 r.append("")
             rate_list.append(r)
         for d in rate_list:
-            self.sql += "insert into aiproduct.fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,ispe,pcr,newcomp,plana,planb) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
+            self.sql += "insert into fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,ispe,pcr,newcomp,plana,planb) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
             d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9])
 
     def insuranceRate7(self):
@@ -498,7 +498,7 @@ class InsuranceTK():
                 r.append("")
             rate_list.append(r)
         for d in rate_list:
-            self.sql += "insert into aiproduct.fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,pcr,newcomp,plana,planb) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
+            self.sql += "insert into fy_insurance_rate(insurance_name,typing,staging,min_age,max_age,pcr,newcomp,plana,planb) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s');" % (
             d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8])
 
     def insuranceRate8(self):
@@ -516,7 +516,7 @@ class InsuranceTK():
                     rate[3] = Data_sheet.name + ":" + str(Data_sheet.cell_value(i, 1)) + "元"
                     rate_list.append(rate)
         for d in rate_list:
-            self.sql += "insert into aiproduct.fy_insurance_rate(insurance_name,min_age,max_age,plana) values ('%s','%s','%s','%s');" % (
+            self.sql += "insert into fy_insurance_rate(insurance_name,min_age,max_age,plana) values ('%s','%s','%s','%s');" % (
             d[0], d[1], d[2], d[3])
 
     def writeSql(self):
@@ -529,5 +529,5 @@ class InsuranceTK():
 
 if __name__ == '__main__':
     Data()
-    # Insurance()
-    # InsuranceTK()
+    Insurance()
+    InsuranceTK()
