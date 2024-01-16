@@ -109,6 +109,7 @@ class Data():
         rate = ["复星联合乳果爱", "", "", "", "", "", "", "", "", "", "", "", ""]
         data_list = []
         age = ""
+        rate6 = ""
         for d in data:
             for dd in d:
                 typing = dd[0].replace("\n", "").replace("her", "HER").replace("pr", "PR")
@@ -142,9 +143,12 @@ class Data():
                         rate[3] = "阴性"
 
                 if (self.datastrip(dd[1]) == "术前未接受新辅助治疗"):
-                    rate[6] = "N"
+                    rate6 = "N"
                 elif (self.datastrip(dd[1]) == "术前接受新辅助治疗"):
-                    rate[6] = "Y"
+                    rate6 = "Y"
+
+                A = dd[4]
+                rate[6] = rate6
                 if (len(dd[2]) > 3):
                     age = dd[2].replace("，", ",").replace("＞", "").replace("＜", "").replace("≥", "").replace("≤",
                                                                                                              "").replace(
