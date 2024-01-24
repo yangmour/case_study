@@ -18,10 +18,13 @@
     </properties>
 
    <dependencies>
+       <!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
        <dependency>
            <groupId>org.codehaus.groovy</groupId>
            <artifactId>groovy-all</artifactId>
+           <type>pom</type>
        </dependency>
+
    </dependencies>
 
 </project>
