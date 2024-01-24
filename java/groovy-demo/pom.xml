@@ -10,7 +10,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>grammar-demo01</module>
-        <module>groovy-springboot-demo02</module>
+<!--        <module>groovy-springboot-demo02</module>-->
+        <module>pdf-demo</module>
     </modules>
 
     <properties>
@@ -18,7 +19,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 <!--        groovy版本号  -->
-        <groovy-all>3.0.17</groovy-all>
+        <groovy-all.version>3.0.12</groovy-all.version>
     </properties>
 
     <dependencyManagement>
@@ -26,7 +27,7 @@
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy-all</artifactId>
-                <version>${groovy-all}</version>
+                <version>${groovy-all.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
