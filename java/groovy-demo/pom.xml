@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>grammar-demo01</module>
-<!--        <module>groovy-springboot-demo02</module>-->
+        <module>springboot-groovy-demo02</module>
         <module>pdf-demo</module>
     </modules>
 
