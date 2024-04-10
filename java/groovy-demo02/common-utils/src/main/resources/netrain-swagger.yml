@@ -1,0 +1,21 @@
+#Swagger属性配置
+netrain:
+  swagger:
+    enable: true
+    title: 接口文档
+    description: 接口文档
+# knife4j配置
+knife4j:
+  enable: true
+  # 开启生产环境屏蔽
+  production: false
+#  basic:
+#    enable: true
+#    username: admin
+#    password: 123456
+  setting:
+    # 是否不显示Knife4j默认的footer，默认为true(显示)
+    enableFooter: false
+    enableFooterCustom: true
+    footerCustomContent: xiwen有限公司
+    enableHomeCustom: true
