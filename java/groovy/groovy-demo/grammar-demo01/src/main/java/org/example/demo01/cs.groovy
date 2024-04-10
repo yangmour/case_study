@@ -177,8 +177,7 @@ assert list.set(2, 11) == 10            // alternative method that returns old v
 assert list == [5, 6, 11, 8]
 
 
-assert [1, 2, 3]*.multiply(2)
-        ==
+assert [1, 2, 3]*.multiply(2) ==
         [1, 2, 3].collect { it.multiply(2) }
 
 list.clear()
@@ -192,8 +191,7 @@ assert list == [0, 2, 4, 6]
 
 
 
-assert ['a', 'b', 'c', 'd', 'e'].sum
-{ ((char) it) - ((char) 'a') } == 10
+assert ['a', 'b', 'c', 'd', 'e'].sum{ ((char) it) - ((char) 'a') } == 10
 assert ['a', 'b', 'c', 'd', 'e'].sum() == 'abcde'
 assert [['a', 'b'], ['c', 'd']].sum() == ['a', 'b', 'c', 'd']
 Comparator cl = { a, b -> a==b?0 : (a>b?1:-1)}
@@ -212,9 +210,9 @@ if(list){
 
 def map = [demo01: 1,demo02:'c']
 
-map.eachWithIndex {key,value,i->{
+map.eachWithIndex {key,value,i ->
     println("name $key age: $value index: $i")
-}}
+}
 
 def remove = map.remove("demo01")
 println "demo01 -> " + remove
