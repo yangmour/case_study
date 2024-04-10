@@ -1,0 +1,8 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: demo-api
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
