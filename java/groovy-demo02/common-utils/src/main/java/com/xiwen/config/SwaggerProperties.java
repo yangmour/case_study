@@ -1,14 +1,12 @@
 package com.xiwen.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 /**
  * Swagger配置属性
  *
  * @since 2021-04-05
  */
-@RefreshScope
 @ConfigurationProperties(prefix = "netrain.swagger")
 public class SwaggerProperties {
 

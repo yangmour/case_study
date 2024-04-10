@@ -104,10 +104,6 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-crypto</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.foryor</groupId>
-            <artifactId>utils</artifactId>
-        </dependency>
     </dependencies>
 
 </project>
