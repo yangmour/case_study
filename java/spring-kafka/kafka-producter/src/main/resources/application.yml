@@ -1,0 +1,48 @@
+server:
+  port: 80
+
+
+spring:
+#v1
+#  kafka:
+#    bootstrap-servers: 192.168.111.172:9095,192.168.111.172:9096,192.168.111.172:9097
+#    bootstrap-servers: 111.229.165.176:9092
+#    producer: # producer 生产者
+#      retries: 0 # 重试次数 0表示不重试
+#      acks: -1 # 应答级别:多少个分区副本备份完成时向生产者发送ack确认(可选0、1、-1/all)
+#      batch-size: 16384 # 批次大小 单位byte
+#      buffer-memory: 33554432 # 生产者缓冲区大小 单位byte
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer # key的序列化器
+#      value-serializer: org.apache.kafka.common.serialization.StringSerializer # value的序列化器
+  application:
+    name: producter-api
+
+# v2
+  kafka:
+    bootstrap-servers: 111.229.165.176:9092
+    producer: # producer 生产者
+      retries: 0 # 重试次数 0表示不重试
+      acks: -1 # 应答级别:多少个分区副本备份完成时向生产者发送ack确认(可选0、1、-1/all)
+      batch-size: 16384 # 批次大小 单位byte
+      buffer-memory: 33554432 # 生产者缓冲区大小 单位byte
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer # key的序列化器
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer # 配置json序列化器
+      properties:
+        interceptor.classes: com.example.kafkaproducter.interceptors.KafkaProducerInterceptor
+
+# v3
+#  kafka:
+#    bootstrap-servers: 111.229.165.176:9092
+#    producer: # producer 生产者
+#      batch-size: 16384 # 批次大小 单位byte
+#      buffer-memory: 33554432 # 生产者缓冲区大小 单位byte
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer # key的序列化器
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer # 配置json序列化器
+#      properties:
+#        interceptor.classes: com.example.kafkaproducter.interceptors.KafkaProducerInterceptor
+#
+#      #**`Kafka`事务操作有一些要求，首先`acks=all`，要确保每个节点都能同步消息，同时`retries>0`，满足这2个条件后，就可以使用`Kafka`事务。**
+#      retries: 1 # 重试次数
+#      acks: -1
+#      # 事务前缀：配置后producer自动开启事务
+#      transaction-id-prefix: tx_
