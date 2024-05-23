@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.concurrent.ExecutionException;
 
 @SpringBootTest
@@ -76,6 +77,57 @@ class KafkaProducterApplicationTests {
     }
     @Test
     void contextLoads() {
+    }
+
+    //测试消费者
+
+    /**
+     * 分区消费
+     */
+    @Test
+    void sendPartitionMsg(){
+        for (int i = 0; i < 3; i++) {
+            log.info("发送条数i = {}", i);
+            kafkaTemplate.send("spring_test_partition_topic",i,"","simple_data"+i+"_"+ LocalDateTime.now());
+        }
+    }
+
+
+    /**
+     * 手动ack确认
+     */
+    @Test
+    void sendAckMsg(){
+        for (int i = 1; i < 5; i++) {
+            kafkaTemplate.send("spring_test_ack_topic",0,"","offset_data"+i+"_"+ LocalDateTime.now());
+        }
+    }
+
+
+    /**
+     * 消费异常处理
+     */
+    @Test
+    void sendAckMsgWithExp(){
+        kafkaTemplate.send("spring_test_ack_topic_withExp",0,"","offset_data"+"_withExp"+ LocalDateTime.now());
+    }
+
+    /**
+     * 消费实体
+     */
+    @Test
+    void sendAckMsgWithDto(){
+        kafkaTemplate.send("spring_test_ack_topic_dto",0,"",new UserDTO("卡布奇诺", 10, "9999999"));
+    }
+
+    /**
+     * 消费重试->死信队列
+     */
+    @Test
+    void sendRertyMsg(){
+        for (int i = 1; i < 2; i++) {
+            kafkaTemplate.send("spring_test_retry_topic",0,"",new UserDTO("测试" + i, 10, "9999999"));
+        }
     }
 
 }

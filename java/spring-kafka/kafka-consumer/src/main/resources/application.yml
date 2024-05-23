@@ -1,0 +1,40 @@
+#server:
+#  port: 8120
+#
+## v1
+#spring:
+#  Kafka:
+##    bootstrap-servers: 192.168.111.172:9095,192.168.111.172:9096,192.168.111.172:9097
+#    bootstrap-servers: 111.229.165.176:9092
+#    consumer: # consumer消费者配置
+#      group-id: consumer-group # 默认的消费组ID
+#      enable-auto-commit: true # 是否自动提交offset
+#      auto-commit-interval: 120000 # 自动提交offset时间间隔2分钟。这期间服务异常停止时，再次重启会导致重复消费
+#      auto-offset-reset: latest  # 指定Offset消费:earliest | latest | none
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+
+server:
+  port: 8120
+spring:
+  Kafka:
+    bootstrap-servers: 111.229.165.176:9092
+    consumer: # consumer消费者配置
+      group-id: consumer-group # 默认的消费组ID
+#      enable-auto-commit: false # 是否自动提交offset
+#      auto-commit-interval: 120000 # 自动提交offset时间间隔2分钟。这期间服务异常停止时，再次重启会导致重复消费\
+      auto-offset-reset: latest  # 指定Offset消费:earliest | latest | none
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      # 监听器消费消息运行的线程数，一般为 机器数*分区数
+      concurrency: 3
+      # 自动提交关闭，需要设置手动消息确认
+      # MANUAL: 调用Acknowledgment.acknowledge()先将offset存放到map本地缓存，在下一次poll之前从缓存拿出来批量提交
+      # manual_immediate: 调用Acknowledgment.acknowledge()后立即提交
+      ack-mode: manual_immediate
+      # 消费监听接口监听的主题不存在时，默认会报错，所以设置为false忽略错误
+      missing-topics-fatal: false
+      # 两次poll之间的最大间隔，默认值为5分钟。如果超过这个间隔会触发reBalance
+      poll-timeout: 600000

@@ -16,8 +16,14 @@
     <packaging>pom</packaging>
     <modules>
         <module>kafka-producter</module>
+        <module>kafka-consumer</module>
     </modules>
     <dependencies>
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+            <version>2.0.35</version>
+        </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
