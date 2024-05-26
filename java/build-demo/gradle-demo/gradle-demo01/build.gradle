@@ -1,0 +1,80 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// 方式1
+//task task1(){
+//    // 任务的配置段：在项目的配置阶段完成
+//    println '这是最简单的任务'
+//    // 任务的行为：在项目的执行阶段完成，doFirst 会在 doLast 执行之前执行
+//    doFirst {
+//        println 'task1 doFirst'
+//    }
+//    doLast {
+//        println 'task1 doLast'
+//    }
+//}
+
+// 方式2
+def map = [:]
+// action属性 可以设置为闭包，设置 task 自身的行为
+map.put("action", { println "task one.." })
+
+task(map, 'task1') {
+    // 任务的配置段：在项目的配置阶段完成
+    println '这是最简单的任务111'
+    // 任务的行为：在项目的执行阶段完成，doFirst 会在 doLast 执行之前执行
+    doFirst {
+        println 'task1 doFirst'
+    }
+    doLast {
+        println 'task1 doLast'
+    }
+}
+
+task1.doFirst {
+    println 'task1 doFirst outer'
+}
+
+task1.doLast {
+    println 'task1 doLast outer'
+}
+
+
+// 参数依赖
+task A {
+    doFirst {
+        println 'task A'
+    }
+}
+
+task B {
+    doFirst {
+        println 'task B'
+    }
+}
+
+// 参数方式依赖： dependsOn后面使用冒号
+task C(dependsOn: ['A', 'B']) {
+    doFirst {
+        println 'task C'
+    }
+}
+
+// gradle学习文档现在用不到先暂停 https://www.yuque.com/fairy-era/yg511q/wn8p53
