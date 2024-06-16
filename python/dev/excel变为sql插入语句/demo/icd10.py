@@ -27,7 +27,7 @@ class Icd10:
     # 创建sql
     def createSql(self, arr, insert_table_name):
         with open("./icd10.sql", "a+") as icd10File:
-            baseSql = "insert into {0}(national_name, national_code, medicare_name, medicare_code) values('{1}','{2}','{3}','{4}','{5}')\n"
+            baseSql = "insert into {0}(national_name, national_code, medicare_name, medicare_code,code) values('{1}','{2}','{3}','{4}','{5}')\n"
             eq_count = 0
             for cols in arr:
                 code = "no-eq"
