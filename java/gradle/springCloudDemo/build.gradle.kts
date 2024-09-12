@@ -8,8 +8,8 @@ plugins {
 }
 
 
-val springCloudVersion: String by extra("2022.0.0")
-val springCloudAliBabaVersion: String by extra("2022.0.0")
+val springCloudVersion: String by extra("2022.0.5")
+val springCloudAliBabaVersion: String by extra("2022.0.0.0-RC2")
 val groovyVersion: String by extra("4.0.22")
 
 group = "com.work"
@@ -57,9 +57,8 @@ subprojects {
 
     dependencyManagement {
         imports {
-//            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
-//            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
-//            mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${springCloudAliBabaVersion}")
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
+            mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${springCloudAliBabaVersion}")
         }
     }
 
