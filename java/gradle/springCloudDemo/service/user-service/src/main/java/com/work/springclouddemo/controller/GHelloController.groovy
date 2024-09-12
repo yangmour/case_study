@@ -1,4 +1,4 @@
-package com.work.controller
+package com.work.springclouddemo.controller
 
 import com.alibaba.fastjson2.JSON
 import com.work.bean.GPerson
