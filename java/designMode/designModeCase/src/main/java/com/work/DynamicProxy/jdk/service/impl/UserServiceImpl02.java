@@ -1,6 +1,6 @@
-package com.work.DynamicProxy.service.impl;
+package com.work.DynamicProxy.jdk.service.impl;
 
-import com.work.DynamicProxy.service.UserService;
+import com.work.DynamicProxy.jdk.service.UserService;
 import org.springframework.stereotype.Service;
 
 

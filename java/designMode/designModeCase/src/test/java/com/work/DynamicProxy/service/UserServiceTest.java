@@ -1,9 +1,10 @@
 package com.work.DynamicProxy.service;
 
 import com.alibaba.fastjson2.JSON;
-import com.work.DynamicProxy.service.impl.UserServiceImpl01;
-import com.work.DynamicProxy.service.impl.UserServiceImpl02;
-import com.work.DynamicProxy.util.ServiceProxyFactory;
+import com.work.DynamicProxy.jdk.service.UserService;
+import com.work.DynamicProxy.jdk.service.impl.UserServiceImpl01;
+import com.work.DynamicProxy.jdk.service.impl.UserServiceImpl02;
+import com.work.DynamicProxy.jdk.util.ServiceProxyFactory;
 import org.junit.jupiter.api.Test;
 
 class UserServiceTest {

@@ -1,4 +1,4 @@
-package com.work.DynamicProxy.service;
+package com.work.DynamicProxy.jdk.service;
 
 
 public interface UserService {

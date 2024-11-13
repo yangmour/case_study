@@ -1,4 +1,4 @@
-package com.work.DynamicProxy.util;
+package com.work.DynamicProxy.jdk.util;
 
 import com.alibaba.fastjson2.JSON;
 import org.slf4j.Logger;
