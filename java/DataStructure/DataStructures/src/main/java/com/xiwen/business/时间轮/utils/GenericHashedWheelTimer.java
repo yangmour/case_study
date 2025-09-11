@@ -1,7 +1,9 @@
-package com.xiwen.business.utils;
+package com.xiwen.business.时间轮.utils;
 
-import com.xiwen.business.enums.TickCalculationStrategyEnum;
+import com.xiwen.business.时间轮.enums.TickCalculationStrategyEnum;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,6 +37,30 @@ public class GenericHashedWheelTimer {
     private final TickCalculationStrategyEnum DEFAULT_STRATEGY = TickCalculationStrategyEnum.UPWARD_ROUNDING;
     // 当前使用的计算策略（支持外部指定）
     private TickCalculationStrategyEnum calculationStrategy;
+
+
+    public static void loginfo(GenericHashedWheelTimer timer) {
+        // 1. 查看所有任务
+        List<GenericHashedWheelTimer.TimerTask> allTasks = timer.getAllTasks();
+        System.out.println("=== 所有任务（共" + allTasks.size() + "个） ===");
+        for (GenericHashedWheelTimer.TimerTask task : allTasks) {
+            System.out.println(task.getTaskInfo());
+        }
+
+        // 2. 查看活跃任务（未取消）
+        List<GenericHashedWheelTimer.TimerTask> activeTasks = timer.getActiveTasks();
+        System.out.println("\n=== 活跃任务（共" + activeTasks.size() + "个） ===");
+        for (GenericHashedWheelTimer.TimerTask task : activeTasks) {
+            System.out.println(task.getTaskInfo());
+        }
+
+        // 3. 查看已取消任务
+        List<GenericHashedWheelTimer.TimerTask> cancelledTasks = timer.getCancelledTasks();
+        System.out.println("\n=== 已取消任务（共" + cancelledTasks.size() + "个） ===");
+        for (GenericHashedWheelTimer.TimerTask task : cancelledTasks) {
+            System.out.println(task.getTaskInfo());
+        }
+    }
 
     /**
      * 构造函数：全参数初始化（支持指定计算策略）
@@ -172,6 +198,8 @@ public class GenericHashedWheelTimer {
                 } catch (InterruptedException e) {
                     if (!started.get()) return; // 正常停止，退出循环
                     continue;
+                } finally {
+                    loginfo(GenericHashedWheelTimer.this);
                 }
                 processCurrentBucket(); // 处理当前刻度的任务
             }
@@ -190,6 +218,53 @@ public class GenericHashedWheelTimer {
 
     private static int nextPowerOfTwo(int n) {
         return n <= 0 ? 1 : (n & -n) == n ? n : Integer.highestOneBit(n) << 1;
+    }
+
+
+    // -------------------------- 新增：任务查询相关方法 --------------------------
+    /**
+     * 获取所有任务（包括已取消和未取消的）
+     * @return 所有任务列表
+     */
+    public List<TimerTask> getAllTasks() {
+        List<TimerTask> allTasks = new ArrayList<>();
+        // 遍历所有时间槽，收集所有任务
+        for (WheelBucket bucket : buckets) {
+            allTasks.addAll(bucket.getAllTasks());
+        }
+        return allTasks;
+    }
+
+    /**
+     * 获取所有活跃任务（未被取消的）
+     * @return 活跃任务列表
+     */
+    public List<TimerTask> getActiveTasks() {
+        List<TimerTask> activeTasks = new ArrayList<>();
+        for (WheelBucket bucket : buckets) {
+            for (TimerTask task : bucket.getAllTasks()) {
+                if (!task.isCancelled()) {
+                    activeTasks.add(task);
+                }
+            }
+        }
+        return activeTasks;
+    }
+
+    /**
+     * 获取所有已取消的任务
+     * @return 已取消任务列表
+     */
+    public List<TimerTask> getCancelledTasks() {
+        List<TimerTask> cancelledTasks = new ArrayList<>();
+        for (WheelBucket bucket : buckets) {
+            for (TimerTask task : bucket.getAllTasks()) {
+                if (task.isCancelled()) {
+                    cancelledTasks.add(task);
+                }
+            }
+        }
+        return cancelledTasks;
     }
 
     private class WheelBucket {
@@ -219,6 +294,14 @@ public class GenericHashedWheelTimer {
                 removalListener.onTaskRemoved(task);
             }
             return removed;
+        }
+
+        /**
+         * 新增：获取当前槽中所有任务（用于外部查询）
+         * @return 任务列表
+         */
+        public List<TimerTask> getAllTasks() {
+            return new ArrayList<>(tasks); // 转换为ArrayList返回，避免并发修改异常
         }
     }
 
@@ -266,6 +349,18 @@ public class GenericHashedWheelTimer {
 
         public boolean isCancelled() {
             return cancelled;
+        }
+        /**
+         * 新增：获取任务详情（用于打印）
+         */
+        public String getTaskInfo() {
+            return String.format(
+                    "Task[创建时间=%d, 延迟=%dms, 剩余轮次=%d, 状态=%s]",
+                    createTime,
+                    delayMs,
+                    rounds,
+                    cancelled ? "已取消" : "活跃"
+            );
         }
     }
 
