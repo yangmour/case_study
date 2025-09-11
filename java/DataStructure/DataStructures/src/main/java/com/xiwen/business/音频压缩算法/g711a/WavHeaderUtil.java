@@ -1,4 +1,4 @@
-package com.xiwen.business.音频压缩算法.g711a.java;
+package com.xiwen.business.音频压缩算法.g711a;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

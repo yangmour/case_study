@@ -1,4 +1,4 @@
-package com.xiwen.business.音频压缩算法.g711a.java;
+package com.xiwen.business.音频压缩算法.g711a;
 
 public class G711Java {
     private static final int SIGN_BIT = 0x80;      /* Sign bit for a A-law byte. */  
