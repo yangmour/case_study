@@ -1,6 +1,5 @@
 package com.xiwen.business.音频压缩算法.g711a.java;
 
-import com.xiwen.business.音频压缩算法.g711a.java.G711Java;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.mock.web.MockMultipartFile;

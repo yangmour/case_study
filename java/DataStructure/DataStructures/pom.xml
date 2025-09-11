@@ -11,7 +11,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <spring-test-version>6.2.5</spring-test-version>
+        <spring-test-version>5.3.24</spring-test-version>
         <spring-boot-web-version>2.7.12</spring-boot-web-version>
         <commons-lang3-version>3.17.0</commons-lang3-version>
     </properties>
